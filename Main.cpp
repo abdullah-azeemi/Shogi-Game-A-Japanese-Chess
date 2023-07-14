@@ -7,8 +7,62 @@
 using namespace std;
 # define Turn 1
 
-void captureCalculator(char x, int turn, int cap_P1[7], int cap_P2[7]);
-void saveturn(char** B, char array[][9][9], int dim, int& arraySize, int cap_count1[7], int cap_count2[7], int capsave1[][7], int capsave2[][7], int &save1size, int & save2size);
+void captureCalculator(char x, int turn, int cap_P1[7], int cap_P2[7])
+{
+	if (turn == 0)
+	{
+		if (x == 'p' || x == 'q' || x == 't' || x == 'u' || x == 'v' || x == 'w' || x == 'y' || x == 'z')
+			cap_P2[0] += 1;
+		else if (x == 'b')
+			cap_P2[1] += 1;
+		else if (x == 'r')
+			cap_P2[2] += 1;
+		else if (x == 'l' || x == 'a')
+			cap_P2[3] += 1;
+		else if (x == 'n' || x == 'c')
+			cap_P2[4] += 1;
+		else if (x == 's' || x == 'f')
+			cap_P2[5] += 1;
+		else if (x == 'g')
+			cap_P2[6] += 1;
+	}
+	if (turn == 1)
+	{
+		if (x == 'P' || x == 'Q' || x == 'T' || x == 'U' || x == 'V' || x == 'W' || x == 'Y' || x == 'Z')
+			cap_P1[0] += 1;
+		else if (x == 'B')
+			cap_P1[1] += 1;
+		else if (x == 'R')
+			cap_P1[2] += 1;
+		else if (x == 'L' || x == 'A')
+			cap_P1[3] += 1;
+		else if (x == 'N' || x == 'C')
+			cap_P1[4] += 1;
+		else if (x == 'S' || x == 'F')
+			cap_P1[5] += 1;
+		else if (x == 'G')
+			cap_P1[6] += 1;
+
+	}
+}
+void saveturn(char** B, char array[][9][9], int dim, int& arraySize, int cap_count1[7], int cap_count2[7], int capsave1[][7], int capsave2[][7], int &save1size, int & save2size)
+{
+	for (int ri = 0; ri < dim; ri++)
+	{
+		for (int ci = 0; ci< dim; ci++)
+		{
+			array[arraySize][ri][ci] = B[ri][ci];
+		}
+	}
+	for (int ri = 0; ri < 7; ri++)
+	{
+		capsave1[save1size][ri] = cap_count1[ri];
+		capsave2[save2size][ri] = cap_count2[ri];
+	}
+	arraySize += 1;
+	save1size += 1;
+	save2size += 1;
+}
 void getRowColbyLeftClick(int& rpos, int& cpos)
 {
 	HANDLE hInput = GetStdHandle(STD_INPUT_HANDLE);
@@ -42,6 +96,57 @@ struct position {
 	int ri;
 	int ci;
 
+};
+struct isPromoted {
+	bool B;
+	bool R;
+	bool S;
+	bool N;
+	bool L;
+	bool P;
+	bool F;
+	bool C;
+	bool A;
+	bool Q;
+	bool T;
+	bool U;
+	bool V;
+	bool W;
+	bool X;
+	bool Y;
+	bool Z;
+	bool b;
+	bool r;
+	bool s;
+	bool n;
+	bool l;
+	bool p;
+	bool f;
+	bool c;
+	bool a;
+	bool q;
+	bool t;
+	bool u;
+	bool v;
+	bool w;
+	bool x;
+	bool y;
+	bool z;
+
+
+	bool j;
+	bool o;
+	bool i;
+	bool d;
+	bool h;
+
+	bool $;
+	bool J;
+	bool O;
+	bool I;
+	bool D;
+	bool H;
+	bool $$;
 };
 void init2(char**& B, int dim, string P_name[2], int turn, isPromoted &P, int cap_P1_count[7], int cap_P2_count[7])
 {
@@ -147,25 +252,1780 @@ bool isBlack(char sym)
 		return true;
 	return false;
 }
-bool isHorizontal(position Sc, position Dc);
-bool isVertical(position Sc, position Dc);
-bool isDiagonal(position Sc, position Dc);
-bool isDiagMove(position Sc, position Dc);
-bool isDiagPathClr1(char**& B, position Sc, position Dc);
-bool isDiagPathClr2(char**& B, position Sc, position Dc);
-bool isDiagPathClr(char**& B, position Sc, position Dc);
-bool ishorizontalPathClear(char** B, position Sc, position Dc);
-bool isverticalPathClear(char** B, position Sc, position Dc);
-bool isDiagonalPathClearL2R(char** B, position Sc, position Dc);
-bool isDiagonalPathClearR2L(char** B, position Sc, position Dc);
-bool isValidGoldGeneral(char** B, position Sc, position Dc);
-bool isValidRook(char** B, position Sc, position Dc, isPromoted P);
-bool isValidLance(char** B, position Sc, position Dc, isPromoted P);
-bool isValidBishop(char** B, position Sc, position Dc, isPromoted P);
-bool isValidSilverGeneral(char** B, position Sc, position Dc, isPromoted P);
-bool isValidKnight(char** B, position Sc, position Dc, isPromoted P);
-bool isValidKing(char** B, position Sc, position Dc);
-bool isValidPawn(char** B, position Sc, position Dc, isPromoted P);
+bool isHorizontal(position Sc, position Dc)
+{
+	return (Sc.ri == Dc.ri);
+}
+bool isVertical(position Sc, position Dc)
+{
+	return (Sc.ci == Dc.ci);
+}
+bool isDiagonal(position Sc, position Dc)
+{
+	int dx = abs(Sc.ri - Dc.ri);
+	int dy = abs(Sc.ci - Dc.ci);
+	if (dx == dy)
+	{
+		return true;
+	}
+	return false;
+}
+
+bool isDiagMove(position Sc, position Dc)
+{
+	int r = abs(Sc.ri - Dc.ri);
+	int c = abs(Sc.ci - Dc.ci);
+	return(r == c);
+}
+bool isDiagPathClr1(char**& B, position Sc, position Dc)
+{
+	int dr;
+	if (Sc.ri < Dc.ri)
+	{
+		dr = Dc.ri - Sc.ri - 1;
+		for (int i = 1; i <= dr; i++)
+		{
+			if (B[Sc.ri + i][Sc.ci + i] != '-')
+				return false;
+		}
+		return true;
+	}
+	else
+	{
+		dr = Sc.ri - Dc.ri - 1;
+		for (int i = 1; i <= dr; i++)
+		{
+			if (B[Sc.ri - i][Sc.ci - i] != '-')
+				return false;
+		}
+		return true;
+	}
+}
+bool isDiagPathClr2(char**& B, position Sc, position Dc)
+{
+	int dr;
+	if (Sc.ri < Dc.ri)
+	{
+		dr = Dc.ri - Sc.ri - 1;
+		for (int i = 1; i <= dr; i++)
+		{
+			if (B[Sc.ri + i][Sc.ci - i] != '-')
+				return false;
+		}
+		return true;
+	}
+	else
+	{
+		dr = Sc.ri - Dc.ri - 1;
+		for (int i = 1; i <= dr; i++)
+		{
+			if (B[Sc.ri - i][Sc.ci + i] != '-')
+				return false;
+		}
+		return true;
+	}
+}
+bool isDiagPathClr(char**& B, position Sc, position Dc)
+{
+	if ((Sc.ri > Dc.ri && Sc.ci > Dc.ci) || (Sc.ri < Dc.ri && Sc.ci < Dc.ci))
+		return isDiagPathClr1(B, Sc, Dc);
+	else
+		return isDiagPathClr2(B, Sc, Dc);
+}
+
+bool ishorizontalPathClear(char** B, position Sc, position Dc)
+{
+	if (Sc.ci > Dc.ci)
+	{
+		for (int c = Sc.ci - 1; c > Dc.ci; c--)
+		{
+			if (B[Sc.ri][c] != '-')
+				return false;
+		}
+		return true;
+	}
+	else
+	{
+		for (int c = Dc.ci - 1; c > Sc.ci; c--)
+		{
+			if (B[Dc.ri][c] != '-')
+				return false;
+		}
+		return true;
+	}
+}
+bool isverticalPathClear(char** B, position Sc, position Dc)
+{
+	int st{}, en{};
+	if (Sc.ri > Dc.ri)
+	{
+		st = Dc.ri;
+		en = Sc.ri;
+	}
+	else
+	{
+		st = Sc.ri;
+		en = Dc.ri;
+	}
+	for (int r = st + 1; r < en; r++)
+	{
+		if (B[r][Sc.ci] != '-')
+			return false;
+	}
+	return true;
+}
+bool isDiagonalPathClearL2Rup(char** B, position Sc, position Dc)
+{
+	if (Sc.ri < Dc.ri)
+	{
+		int dr = Dc.ri - Sc.ri - 1;
+		for (int i = 0; i < dr; i++)
+		{
+			if (B[Sc.ri + i][Sc.ci + i] != '-')
+				return false;
+		}
+		return true;
+	}
+}
+bool isDiagonalPathClearL2Rdown(char** B, position Sc, position Dc)
+{
+	if (Sc.ri > Dc.ri)
+	{
+		int dr = Sc.ri - Dc.ri - 1;
+		for (int i = 0; i < dr; i++)
+		{
+			if (B[Sc.ri - i][Sc.ci - i] != '-')
+				return false;
+		}
+		return true;
+	}
+}
+bool isDiagonalPathClearR2Lup(char** B, position Sc, position Dc)
+{
+
+
+	int dr = Dc.ri - Sc.ri - 1;
+	for (int i = 0; i < dr; i++)
+	{
+		if (B[Sc.ri + i][Sc.ci - i] != '-')
+			return false;
+	}
+	return true;
+
+}
+bool isDiagonalPathClearR2Ldown(char** B, position Sc, position Dc)
+{
+	int dr = Sc.ri - Dc.ri - 1;
+	for (int i = 0; i < dr; i++)
+	{
+		if (B[Sc.ri - i][Sc.ci + i] != '-')
+			return false;
+	}
+	return true;
+}
+bool isDiagonalPathClearL2R(char** B, position Sc, position Dc)
+{
+	int dr;
+	if (Sc.ri < Dc.ri)
+	{
+		dr = Dc.ri - Sc.ri-1;
+		for (int i = 1; i <= dr; i++)
+		{
+			if (B[Sc.ri + i][Sc.ci + i] != '-')
+				return false;
+		}
+		return true;
+	}
+	else
+	{
+		dr = Sc.ri - Dc.ri-1;
+		for (int i = 1; i <= dr; i++)
+		{
+			if (B[Sc.ri - i][Sc.ci + i] != '-')
+				return false;
+		}
+		return true;
+	}
+}
+bool isDiagonalPathClearR2L(char** B, position Sc, position Dc)
+{
+	int dr;
+	if (Sc.ri < Dc.ri)
+	{
+		dr = Dc.ri - Sc.ri - 1;
+		for (int i = 1; i < dr; i++)
+		{
+			if (B[Sc.ri + i][Sc.ci - i] != '-')
+				return false;
+		}
+		return true;
+	}
+	else
+	{
+		dr = Sc.ri - Dc.ri - 1;
+		for (int i = 1; i < dr; i++)
+		{
+			if (B[Sc.ri - i][Sc.ci + i] != '-')
+				return false;
+		}
+		return true;
+	}
+}
+
+bool isValidGoldGeneral(char** B, position Sc, position Dc)
+{
+	if (B[Sc.ri][Sc.ci] == 'G' )
+	{
+		if (isDiagonal(Sc, Dc) == true)
+		{
+			if ((Dc.ri - Sc.ri) == 1)
+				return true;
+
+			return false;
+		}
+		if (isVertical(Sc, Dc) == true)
+		{
+			if (abs(Sc.ri - Dc.ri) == 1)
+				return true;
+
+			return false;
+		}
+		if (isHorizontal(Sc, Dc) == true)
+		{
+			if (abs(Sc.ci - Dc.ci) == 1)
+				return true;
+
+			return false;
+		}
+	}
+	else if (B[Sc.ri][Sc.ci] == 'g')
+	{
+		if (isDiagonal(Sc, Dc) == true)
+		{
+			if ((Sc.ri - Dc.ri) == 1)
+				return true;
+
+			return false;
+		}
+		if (isVertical(Sc, Dc) == true)
+		{
+			if (abs(Sc.ri - Dc.ri) == 1)
+				return true;
+
+			return false;
+		}
+		if (isHorizontal(Sc, Dc) == true)
+		{
+			if (abs(Sc.ci - Dc.ci) == 1)
+				return true;
+
+			return false;
+		}
+	}
+
+	return false;
+}
+bool isValidGoldGeneral2(char** B, position Sc, position Dc, char x)
+{
+	
+	if (B[Sc.ri][Sc.ci] == 'G')
+	{
+		if (isDiagonal(Sc, Dc) == true)
+		{
+			if ((Dc.ri - Sc.ri) == 1)
+				return true;
+
+			return false;
+		}
+		if (isVertical(Sc, Dc) == true)
+		{
+			if (abs(Sc.ri - Dc.ri) == 1)
+				return true;
+
+			return false;
+		}
+		if (isHorizontal(Sc, Dc) == true)
+		{
+			if (abs(Sc.ci - Dc.ci) == 1)
+				return true;
+
+			return false;
+		}
+	}
+	else if (B[Sc.ri][Sc.ci] == 'g')
+	{
+		if (isDiagonal(Sc, Dc) == true)
+		{
+			if ((Sc.ri - Dc.ri) == 1)
+				return true;
+
+			return false;
+		}
+		if (isVertical(Sc, Dc) == true)
+		{
+			if (abs(Sc.ri - Dc.ri) == 1)
+				return true;
+
+			return false;
+		}
+		if (isHorizontal(Sc, Dc) == true)
+		{
+			if (abs(Sc.ci - Dc.ci) == 1)
+				return true;
+
+			return false;
+		}
+	}
+	else if (isBlack(x)== true)
+	{
+	if (B[Sc.ri][Sc.ci] == x)
+	{
+		if (isDiagonal(Sc, Dc) == true)
+		{
+			if ((Sc.ri - Dc.ri) == 1)
+				return true;
+
+				return false;
+		}
+		if (isVertical(Sc, Dc) == true)
+		{
+			if (abs(Sc.ri - Dc.ri) == 1)
+				return true;
+
+			return false;
+		}
+		if (isHorizontal(Sc, Dc) == true)
+		{
+			if (abs(Sc.ci - Dc.ci) == 1)
+				return true;
+
+			return false;
+		}
+	}
+	}
+	else if (isWhite(x) == true)
+	{
+		if (B[Sc.ri][Sc.ci] == 'G' || B[Sc.ri][Sc.ci])
+		{
+			if (isDiagonal(Sc, Dc) == true)
+			{
+				if ((Dc.ri - Sc.ri) == 1)
+					return true;
+
+				return false;
+			}
+			if (isVertical(Sc, Dc) == true)
+			{
+				if (abs(Sc.ri - Dc.ri) == 1)
+					return true;
+
+				return false;
+			}
+			if (isHorizontal(Sc, Dc) == true)
+			{
+				if (abs(Sc.ci - Dc.ci) == 1)
+					return true;
+
+				return false;
+			}
+		}
+	}
+
+	return false;
+}
+bool isValidRook(char** B, position Sc, position Dc, isPromoted P)
+{
+	char x = B[Sc.ri][Sc.ci];
+	if (x == 'R')
+	{
+		if (P.R == true)
+		{
+			if (isHorizontal(Sc, Dc) == true)
+			{
+				if (ishorizontalPathClear(B, Sc, Dc) == true)
+				{
+					return true;
+				}
+
+				return false;
+			}
+			if (isVertical(Sc, Dc) == true)
+			{
+				if (isverticalPathClear(B, Sc, Dc) == true)
+				{
+					return true;
+				}
+
+				return false;
+			}
+			if (isDiagonal(Sc, Dc) == true)
+			{
+				if (abs(Dc.ci - Sc.ci) == 1)
+				{
+					return true;
+				}
+				return false;
+			}
+			return false;
+		}
+		else
+		{
+			if (isHorizontal(Sc, Dc) == true)
+			{
+				if (ishorizontalPathClear(B, Sc, Dc) == true)
+					return true;
+
+				return false;
+			}
+			if (isVertical(Sc, Dc) == true)
+			{
+				if (isverticalPathClear(B, Sc, Dc) == true)
+					return true;
+
+				return false;
+			}
+			return false;
+		}
+	}
+	else if (x == 'r')
+	{
+		if (P.r == true)
+		{
+			if (isHorizontal(Sc, Dc) == true)
+			{
+				if (ishorizontalPathClear(B, Sc, Dc) == true)
+				{
+					return true;
+				}
+
+				return false;
+			}
+			if (isVertical(Sc, Dc) == true)
+			{
+				if (isverticalPathClear(B, Sc, Dc) == true)
+				{
+					return true;
+				}
+
+				return false;
+			}
+			if (isDiagonal(Sc, Dc) == true)
+			{
+				if (abs(Dc.ci - Sc.ci) == 1)
+				{
+					return true;
+				}
+				return false;
+			}
+			return false;
+		}
+		else
+		{
+			if (isHorizontal(Sc, Dc) == true)
+			{
+				if (ishorizontalPathClear(B, Sc, Dc) == true)
+					return true;
+
+				return false;
+			}
+			if (isVertical(Sc, Dc) == true)
+			{
+				if (isverticalPathClear(B, Sc, Dc) == true)
+					return true;
+
+				return false;
+			}
+			return false;
+		}
+	}
+	/*else if (x == 'I')
+	{
+		if (P.I == true)
+		{
+			if (isHorizontal(Sc, Dc) == true)
+			{
+				if (ishorizontalPathClear(B, Sc, Dc) == true)
+				{
+					return true;
+				}
+
+				return false;
+			}
+			if (isVertical(Sc, Dc) == true)
+			{
+				if (isverticalPathClear(B, Sc, Dc) == true)
+				{
+					return true;
+				}
+
+				return false;
+			}
+			if (isDiagonal(Sc, Dc) == true)
+			{
+				if (abs(Dc.ci - Sc.ci) == 1)
+				{
+					return true;
+				}
+				return false;
+			}
+			return false;
+		}
+		else
+		{
+			if (isHorizontal(Sc, Dc) == true)
+			{
+				if (ishorizontalPathClear(B, Sc, Dc) == true)
+					return true;
+
+				return false;
+			}
+			if (isVertical(Sc, Dc) == true)
+			{
+				if (isverticalPathClear(B, Sc, Dc) == true)
+					return true;
+
+				return false;
+			}
+			return false;
+		}
+	}
+	else if (x == 'i')
+	{
+		if (P.i == true)
+		{
+			if (isHorizontal(Sc, Dc) == true)
+			{
+				if (ishorizontalPathClear(B, Sc, Dc) == true)
+				{
+					return true;
+				}
+
+				return false;
+			}
+			if (isVertical(Sc, Dc) == true)
+			{
+				if (isverticalPathClear(B, Sc, Dc) == true)
+				{
+					return true;
+				}
+
+				return false;
+			}
+			if (isDiagonal(Sc, Dc) == true)
+			{
+				if (abs(Dc.ci - Sc.ci) == 1)
+				{
+					return true;
+				}
+				return false;
+			}
+			return false;
+		}
+		else
+		{
+			if (isHorizontal(Sc, Dc) == true)
+			{
+				if (ishorizontalPathClear(B, Sc, Dc) == true)
+					return true;
+
+				return false;
+			}
+			if (isVertical(Sc, Dc) == true)
+			{
+				if (isverticalPathClear(B, Sc, Dc) == true)
+					return true;
+
+				return false;
+			}
+			return false;
+		}
+	}*/
+	
+}
+bool isValidLance(char** B, position Sc, position Dc, isPromoted P)
+{
+	char x = B[Sc.ri][Sc.ci];
+	if (x == 'L')
+	{
+		if (P.L == true)
+		{
+			if (isValidGoldGeneral2(B, Sc, Dc,'L') == true)
+			{
+				return true;
+			}
+			return false;
+		}
+		else
+		{
+			return (isVertical(Sc, Dc) && isverticalPathClear(B, Sc, Dc));
+		}
+	}
+	else if (x == 'A')
+	{
+		if (P.A == true)
+		{
+			if (isValidGoldGeneral2(B, Sc, Dc,'A') == true)
+			{
+				return true;
+			}
+			return false;
+		}
+		else
+		{
+			return (isVertical(Sc, Dc) && isverticalPathClear(B, Sc, Dc));
+		}
+	}
+	else if (x == 'l')
+	{
+		if (P.l == true)
+		{
+			if (isValidGoldGeneral2(B, Sc, Dc,'l') == true)
+			{
+				return true;
+			}
+			return false;
+		}
+		else
+		{
+			return (isVertical(Sc, Dc) && isverticalPathClear(B, Sc, Dc));
+		}
+	}
+	else if (x == 'a')
+	{
+		if (P.a == true)
+		{
+			if (isValidGoldGeneral2(B, Sc, Dc,'a') == true)
+			{
+				return true;
+			}
+			return false;
+		}
+		else
+		{
+			return (isVertical(Sc, Dc) && isverticalPathClear(B, Sc, Dc));
+		}
+	}
+	else if (x == 'O')
+	{
+		if (P.O == true)
+		{
+			if (isValidGoldGeneral2(B, Sc, Dc,'O') == true)
+			{
+				return true;
+			}
+			return false;
+		}
+		else
+		{
+			return (isVertical(Sc, Dc) && isverticalPathClear(B, Sc, Dc));
+		}
+	}
+	else if (x == 'o')
+	{
+		if (P.o == true)
+		{
+			if (isValidGoldGeneral2(B, Sc, Dc,'o') == true)
+			{
+				return true;
+			}
+			return false;
+		}
+		else
+		{
+			return (isVertical(Sc, Dc) && isverticalPathClear(B, Sc, Dc));
+		}
+	}
+	
+	return false;
+}
+bool isValidBishop(char** B, position Sc, position Dc, isPromoted P)
+{
+	char x = B[Sc.ri][Sc.ci];
+	if (x == 'B')
+	{
+		if (P.B == true)
+		{
+			if (isDiagonal(Sc, Dc) == true)
+			{
+				if (Sc.ci < Dc.ci)
+				{
+					if (isDiagonalPathClearL2R(B, Sc, Dc) == true)
+					{
+						return true;
+					}
+					return false;
+				}
+				if (Sc.ci > Dc.ci)
+				{
+					if (isDiagonalPathClearR2L(B, Sc, Dc) == true)
+					{
+						return true;
+					}
+					return false;
+				}
+				return false;
+			}
+			if (isDiagonal(Sc, Dc) == true)
+			{
+				if (abs(Dc.ci - Sc.ci) == 1)
+				{
+					return true;
+				}
+				return false;
+			}
+		}
+		else
+		{
+			/*if (isDiagonal(Sc, Dc) == true)
+			{
+				if (Sc.ci < Dc.ci)
+				{
+					if (isDiagonalPathClearL2R(B, Sc, Dc) == true)
+					{
+						return true;
+					}
+					return false;
+				}
+				if (Sc.ci > Dc.ci)
+				{
+					if (isDiagonalPathClearR2L(B, Sc, Dc) == true)
+					{
+						return true;
+					}
+					return false;
+				}
+				return false;
+				return false;
+			}*/
+			return(isDiagMove(Sc, Dc) && isDiagPathClr(B, Sc, Dc));
+		}
+		return false;
+	}
+	else if (x == 'b')
+	{
+		if (P.b == true)
+		{
+			if (isDiagonal(Sc, Dc) == true)
+			{
+				if (Sc.ci < Dc.ci)
+				{
+					if (isDiagonalPathClearL2R(B, Sc, Dc) == true)
+					{
+						return true;
+					}
+					return false;
+				}
+				if (Sc.ci > Dc.ci)
+				{
+					if (isDiagonalPathClearR2L(B, Sc, Dc) == true)
+					{
+						return true;
+					}
+					return false;
+				}
+				return false;
+			}
+			if (isDiagonal(Sc, Dc) == true)
+			{
+				if (abs(Dc.ci - Sc.ci) == 1)
+				{
+					return true;
+				}
+				return false;
+			}
+		}
+		else
+		{
+			/*if (isDiagonal(Sc, Dc) == true)
+			{
+				if (Sc.ci < Dc.ci)
+				{
+					if (isDiagonalPathClearL2R(B, Sc, Dc) == true)
+					{
+						return true;
+					}
+					return false;
+				}
+				if (Sc.ci > Dc.ci)
+				{
+					if (isDiagonalPathClearR2L(B, Sc, Dc) == true)
+					{
+						return true;
+					}
+					return false;
+				}
+				return false;
+				return false;
+			}*/
+			return(isDiagMove(Sc, Dc) && isDiagPathClr(B, Sc, Dc));
+		}
+		return false;
+	}
+	//else if (x == 'D')
+	//{
+	//	if (P.D == true)
+	//	{
+	//		if (isDiagonal(Sc, Dc) == true)
+	//		{
+	//			if (Sc.ci < Dc.ci)
+	//			{
+	//				if (isDiagonalPathClearL2R(B, Sc, Dc) == true)
+	//				{
+	//					return true;
+	//				}
+	//				return false;
+	//			}
+	//			if (Sc.ci > Dc.ci)
+	//			{
+	//				if (isDiagonalPathClearR2L(B, Sc, Dc) == true)
+	//				{
+	//					return true;
+	//				}
+	//				return false;
+	//			}
+	//			return false;
+	//		}
+	//		if (isDiagonal(Sc, Dc) == true)
+	//		{
+	//			if (abs(Dc.ci - Sc.ci) == 1)
+	//			{
+	//				return true;
+	//			}
+	//			return false;
+	//		}
+	//	}
+	//	else
+	//	{
+	//		if (isDiagonal(Sc, Dc) == true)
+	//		{
+	//			if (Sc.ci < Dc.ci)
+	//			{
+	//				if (isDiagonalPathClearL2R(B, Sc, Dc) == true)
+	//				{
+	//					return true;
+	//				}
+	//				return false;
+	//			}
+	//			if (Sc.ci > Dc.ci)
+	//			{
+	//				if (isDiagonalPathClearR2L(B, Sc, Dc) == true)
+	//				{
+	//					return true;
+	//				}
+	//				return false;
+	//			}
+	//			return false;
+	//			return false;
+	//		}
+	//	}
+	//	return false;
+	//}
+	//else if (x == 'd')
+	//{
+	//	if (P.d == true)
+	//	{
+	//		if (isDiagonal(Sc, Dc) == true)
+	//		{
+	//			if (Sc.ci < Dc.ci)
+	//			{
+	//				if (isDiagonalPathClearL2R(B, Sc, Dc) == true)
+	//				{
+	//					return true;
+	//				}
+	//				return false;
+	//			}
+	//			if (Sc.ci > Dc.ci)
+	//			{
+	//				if (isDiagonalPathClearR2L(B, Sc, Dc) == true)
+	//				{
+	//					return true;
+	//				}
+	//				return false;
+	//			}
+	//			return false;
+	//		}
+	//		if (isDiagonal(Sc, Dc) == true)
+	//		{
+	//			if (abs(Dc.ci - Sc.ci) == 1)
+	//			{
+	//				return true;
+	//			}
+	//			return false;
+	//		}
+	//	}
+	//	else
+	//	{
+	//		if (isDiagonal(Sc, Dc) == true)
+	//		{
+	//			if (Sc.ci < Dc.ci)
+	//			{
+	//				if (isDiagonalPathClearL2R(B, Sc, Dc) == true)
+	//				{
+	//					return true;
+	//				}
+	//				return false;
+	//			}
+	//			if (Sc.ci > Dc.ci)
+	//			{
+	//				if (isDiagonalPathClearR2L(B, Sc, Dc) == true)
+	//				{
+	//					return true;
+	//				}
+	//				return false;
+	//			}
+	//			return false;
+	//			return false;
+	//		}
+	//	}
+	//	return false;
+	//}
+
+	return false;
+}
+bool isValidSilverGeneral(char** B, position Sc, position Dc, isPromoted P)
+{
+	char x = B[Sc.ri][Sc.ci];
+	if (x == 'S')
+	{
+		if (P.S == true)
+		{
+			if (isValidGoldGeneral2(B, Sc, Dc,'S') == true)
+			{
+				return true;
+			}
+			return false;
+		}
+		else
+		{
+			if (isVertical(Sc, Dc) == true)
+			{
+					if ((Dc.ri - Sc.ri) == 1)
+					{
+						return true;
+					}
+					return false;
+			}
+			if (isDiagonal(Sc, Dc) == true)
+			{
+				if (abs(Dc.ci - Sc.ci) == 1)
+				{
+					return true;
+				}
+				return false;
+				
+			}
+			return false;
+		}
+	}
+	else if (x == 'F')
+	{
+		if (P.F == true)
+		{
+			if (isValidGoldGeneral2(B, Sc, Dc,'F') == true)
+			{
+				return true;
+			}
+			return false;
+		}
+		else
+		{
+			if (isVertical(Sc, Dc) == true)
+			{
+				if ((Dc.ri - Sc.ri) == 1)
+				{
+					return true;
+				}
+				return false;
+			}
+			if (isDiagonal(Sc, Dc) == true)
+			{
+				if (abs(Dc.ci - Sc.ci) == 1)
+				{
+					return true;
+				}
+				return false;
+
+			}
+			return false;
+		}
+	}
+	else if (x == 's')
+	{
+		if (P.s == true)
+		{
+			if (isValidGoldGeneral2(B, Sc, Dc,'s') == true)
+			{
+				return true;
+			}
+			return false;
+		}
+		else
+		{
+			if (isVertical(Sc, Dc) == true)
+			{
+				if ((Sc.ri - Dc.ri) == 1)
+				{
+					return true;
+				}
+				return false;
+			}
+			if (isDiagonal(Sc, Dc) == true)
+			{
+				if (abs(Dc.ci - Sc.ci) == 1)
+				{
+					return true;
+				}
+				return false;
+
+			}
+			return false;
+		}
+	}
+	else if (x == 'f')
+	{
+		if (P.f == true)
+		{
+			if (isValidGoldGeneral2(B, Sc, Dc,'f') == true)
+			{
+				return true;
+			}
+			return false;
+		}
+		else
+		{
+			if (isVertical(Sc, Dc) == true)
+			{
+				if ((Sc.ri - Dc.ri) == 1)
+				{
+					return true;
+				}
+				return false;
+			}
+			if (isDiagonal(Sc, Dc) == true)
+			{
+				if (abs(Dc.ci - Sc.ci) == 1)
+				{
+					return true;
+				}
+				return false;
+
+			}
+			return false;
+		}
+	}
+	else if (x == '$')
+	{
+		if (P.$ == true)
+		{
+			if (isValidGoldGeneral2(B, Sc, Dc,'$') == true)
+			{
+				return true;
+			}
+			return false;
+		}
+		else
+		{
+			if (isVertical(Sc, Dc) == true)
+			{
+				if ((Dc.ri - Sc.ri) == 1)
+				{
+					return true;
+				}
+				return false;
+			}
+			if (isDiagonal(Sc, Dc) == true)
+			{
+				if (abs(Dc.ci - Sc.ci) == 1)
+				{
+					return true;
+				}
+				return false;
+
+			}
+			return false;
+		}
+	}
+	else if (x == '$$')
+	{
+		if (P.$$ == true)
+		{
+			if (isValidGoldGeneral2(B, Sc, Dc,'$$') == true)
+			{
+				return true;
+			}
+			return false;
+		}
+		else
+		{
+			if (isVertical(Sc, Dc) == true)
+			{
+				if ((Sc.ri - Dc.ri) == 1)
+				{
+					return true;
+				}
+				return false;
+			}
+			if (isDiagonal(Sc, Dc) == true)
+			{
+				if (abs(Dc.ci - Sc.ci) == 1)
+				{
+					return true;
+				}
+				return false;
+
+			}
+			return false;
+		}
+	}
+
+	return false;
+}
+bool isValidKnight(char** B, position Sc, position Dc, isPromoted P)
+{
+	char x = B[Sc.ri][Sc.ci];
+	if (x == 'N')
+	{
+		if (P.N == true)
+		{
+			if (isValidGoldGeneral(B, Sc, Dc) == true)
+			{
+				return true;
+			}
+			return false;
+		}
+		else
+		{
+			if ((Sc.ri == Dc.ri - 2) && (Sc.ci == Dc.ci - 1))
+			{
+				return true;
+			}
+			if ((Sc.ri == Dc.ri - 2) && (Sc.ci == Dc.ci + 1))
+			{
+				return true;
+			}
+			return false;
+		}
+	}
+	else if (x == 'C')
+	{
+		if (P.C == true)
+		{
+			if (isValidGoldGeneral(B, Sc, Dc) == true)
+			{
+				return true;
+			}
+			return false;
+		}
+		else
+		{
+			if ((Sc.ri == Dc.ri - 2) && (Sc.ci == Dc.ci - 1))
+			{
+				return true;
+			}
+			if ((Sc.ri == Dc.ri - 2) && (Sc.ci == Dc.ci + 1))
+			{
+				return true;
+			}
+			return false;
+		}
+	}
+	else if (x == 'n')
+	{
+		if (P.n == true)
+		{
+			if (isValidGoldGeneral(B, Sc, Dc) == true)
+			{
+				return true;
+			}
+			return false;
+		}
+		else
+		{
+			if ((Sc.ri == Dc.ri + 2) && (Sc.ci == Dc.ci - 1))
+			{
+				return true;
+			}
+			if ((Sc.ri == Dc.ri + 2) && (Sc.ci == Dc.ci + 1))
+			{
+				return true;
+			}
+			return false;
+		}
+	}
+	else if (x == 'c')
+	{
+		if (P.c == true)
+		{
+			if (isValidGoldGeneral(B, Sc, Dc) == true)
+			{
+				return true;
+			}
+			return false;
+		}
+		else
+		{
+			if ((Sc.ri == Dc.ri + 2) && (Sc.ci == Dc.ci - 1))
+			{
+				return true;
+			}
+			if ((Sc.ri == Dc.ri + 2) && (Sc.ci == Dc.ci + 1))
+			{
+				return true;
+			}
+			return false;
+		}
+	}
+	/*else if (x == 'H')
+	{
+		if (P.H == true)
+		{
+			if (isValidGoldGeneral(B, Sc, Dc) == true)
+			{
+				return true;
+			}
+			return false;
+		}
+		else
+		{
+			if ((Sc.ri == Dc.ri - 2) && (Sc.ci == Dc.ci - 1))
+			{
+				return true;
+			}
+			if ((Sc.ri == Dc.ri - 2) && (Sc.ci == Dc.ci + 1))
+			{
+				return true;
+			}
+			return false;
+		}
+	}
+	else if (x == 'h')
+	{
+		if (P.h == true)
+		{
+			if (isValidGoldGeneral(B, Sc, Dc) == true)
+			{
+				return true;
+			}
+			return false;
+		}
+		else
+		{
+			if ((Sc.ri == Dc.ri + 2) && (Sc.ci == Dc.ci - 1))
+			{
+				return true;
+			}
+			if ((Sc.ri == Dc.ri + 2) && (Sc.ci == Dc.ci + 1))
+			{
+				return true;
+			}
+			return false;
+		}
+	}*/
+
+	return false;
+}
+bool isValidKing(char** B, position Sc, position Dc)
+{
+	if (isVertical(Sc, Dc) == true)
+	{
+		if (isverticalPathClear(B, Sc, Dc) == true)
+		{
+			if (abs(Sc.ri - Dc.ri) == 1)
+			{
+				return true;
+			}
+			return false;
+		}
+		return false;
+	}
+	if (isHorizontal(Sc, Dc) == true)
+	{
+		if (ishorizontalPathClear(B, Sc, Dc) == true)
+		{
+			if (abs(Sc.ci - Dc.ci) == 1)
+			{
+				return true;
+			}
+			return false;
+		}
+		return false;
+	}
+	if (isDiagonal(Sc, Dc) == true)
+	{
+		if (abs(Dc.ci - Sc.ci) == 1)
+		{
+			return true;
+		}
+		return false;
+	}
+	return false;
+}
+bool isValidPawn(char** B, position Sc, position Dc, isPromoted P)
+{
+	char x = B[Sc.ri][Sc.ci];
+	if (x == 'p')
+	{
+		if (P.p == true)
+		{
+			if (isValidGoldGeneral2(B, Sc, Dc,'p') == true)
+			{
+				return true;
+			}
+			return false;
+		}
+		else
+		{
+			if (isVertical(Sc, Dc) == true)
+			{
+				if (Sc.ri - Dc.ri == 1)
+				{
+					return true;
+				}
+				return false;
+			}
+			return false;
+		}
+	}
+	else if (x == 'q')
+	{
+		if (P.q == true)
+		{
+			if (isValidGoldGeneral2(B, Sc, Dc,'q') == true)
+			{
+				return true;
+			}
+			return false;
+		}
+		else
+		{
+			if (isVertical(Sc, Dc) == true)
+			{
+				if (Sc.ri - Dc.ri == 1)
+				{
+					return true;
+				}
+				return false;
+			}
+			return false;
+		}
+	}
+	else if (x == 't')
+	{
+		if (P.t == true)
+		{
+			if (isValidGoldGeneral2(B, Sc, Dc,'t') == true)
+			{
+				return true;
+			}
+			return false;
+		}
+		else
+		{
+			if (isVertical(Sc, Dc) == true)
+			{
+				if (Sc.ri - Dc.ri == 1)
+				{
+					return true;
+				}
+				return false;
+			}
+			return false;
+		}
+	}
+	else if (x == 'u')
+	{
+		if (P.u == true)
+		{
+			if (isValidGoldGeneral2(B, Sc, Dc,'u') == true)
+			{
+				return true;
+			}
+			return false;
+		}
+		else
+		{
+			if (isVertical(Sc, Dc) == true)
+			{
+				if (Sc.ri - Dc.ri == 1)
+				{
+					return true;
+				}
+				return false;
+			}
+			return false;
+		}
+	}
+	else if (x == 'v')
+	{
+		if (P.v == true)
+		{
+			if (isValidGoldGeneral2(B, Sc, Dc,'v') == true)
+			{
+				return true;
+			}
+			return false;
+		}
+		else
+		{
+			if (isVertical(Sc, Dc) == true)
+			{
+				if (Sc.ri - Dc.ri == 1)
+				{
+					return true;
+				}
+				return false;
+			}
+			return false;
+		}
+	}
+	else if (x == 'w')
+	{
+		if (P.w == true)
+		{
+			if (isValidGoldGeneral2(B, Sc, Dc,'w') == true)
+			{
+				return true;
+			}
+			return false;
+		}
+		else
+		{
+			if (isVertical(Sc, Dc) == true)
+			{
+				if (Sc.ri - Dc.ri == 1)
+				{
+					return true;
+				}
+				return false;
+			}
+			return false;
+		}
+	}
+	else if (x == 'x')
+	{
+		if (P.x == true)
+		{
+			if (isValidGoldGeneral2(B, Sc, Dc,'x') == true)
+			{
+				return true;
+			}
+			return false;
+		}
+		else
+		{
+			if (isVertical(Sc, Dc) == true)
+			{
+				if (Sc.ri - Dc.ri == 1)
+				{
+					return true;
+				}
+				return false;
+			}
+			return false;
+		}
+	}
+	else if (x == 'y')
+	{
+		if (P.y == true)
+		{
+			if (isValidGoldGeneral2(B, Sc, Dc,'y') == true)
+			{
+				return true;
+			}
+			return false;
+		}
+		else
+		{
+			if (isVertical(Sc, Dc) == true)
+			{
+				if (Sc.ri - Dc.ri == 1)
+				{
+					return true;
+				}
+				return false;
+			}
+			return false;
+		}
+	}
+	else if (x == 'z')
+	{
+		if (P.t == true)
+		{
+			if (isValidGoldGeneral2(B, Sc, Dc,'z') == true)
+			{
+				return true;
+			}
+			return false;
+		}
+		else
+		{
+			if (isVertical(Sc, Dc) == true)
+			{
+				if (Sc.ri - Dc.ri == 1)
+				{
+					return true;
+				}
+				return false;
+			}
+			return false;
+		}
+	}
+	else if (x == 'j')
+	{
+		if (P.j == true)
+		{
+			if (isValidGoldGeneral2(B, Sc, Dc,'j') == true)
+			{
+				return true;
+			}
+			return false;
+		}
+		else
+		{
+			if (isVertical(Sc, Dc) == true)
+			{
+				if (Sc.ri - Dc.ri == 1)
+				{
+					return true;
+				}
+				return false;
+			}
+			return false;
+		}
+	}
+
+	else if (x == 'P')
+	{
+		if (P.P == true)
+		{
+			if (isValidGoldGeneral2(B, Sc, Dc,'P') == true)
+			{
+				return true;
+			}
+			return false;
+		}
+		else
+		{
+			if (isVertical(Sc, Dc) == true)
+			{
+				if (Dc.ri - Sc.ri == 1)
+				{
+					return true;
+				}
+				return false;
+			}
+			return false;
+		}
+	}
+	else if (x == 'Q')
+	{
+		if (P.Q == true)
+		{
+			if (isValidGoldGeneral2(B, Sc, Dc,'Q') == true)
+			{
+				return true;
+			}
+			return false;
+		}
+		else
+		{
+			if (isVertical(Sc, Dc) == true)
+			{
+				if (Dc.ri - Sc.ri == 1)
+				{
+					return true;
+				}
+				return false;
+			}
+			return false;
+		}
+	}
+	else if (x == 'T')
+	{
+		if (P.T == true)
+		{
+			if (isValidGoldGeneral2(B, Sc, Dc,'Q') == true)
+			{
+				return true;
+			}
+			return false;
+		}
+		else
+		{
+			if (isVertical(Sc, Dc) == true)
+			{
+				if (Dc.ri - Sc.ri == 1)
+				{
+					return true;
+				}
+				return false;
+			}
+			return false;
+		}
+	}
+	else if (x == 'U')
+	{
+		if (P.U == true)
+		{
+			if (isValidGoldGeneral2(B, Sc, Dc,'U') == true)
+			{
+				return true;
+			}
+			return false;
+		}
+		else
+		{
+			if (isVertical(Sc, Dc) == true)
+			{
+				if (Dc.ri - Sc.ri == 1)
+				{
+					return true;
+				}
+				return false;
+			}
+			return false;
+		}
+	}
+	else if (x == 'V')
+	{
+		if (P.V == true)
+		{
+			if (isValidGoldGeneral2(B, Sc, Dc,'V') == true)
+			{
+				return true;
+			}
+			return false;
+		}
+		else
+		{
+			if (isVertical(Sc, Dc) == true)
+			{
+				if (Dc.ri - Sc.ri == 1)
+				{
+					return true;
+				}
+				return false;
+			}
+			return false;
+		}
+	}
+	else if (x == 'W')
+	{
+		if (P.W == true)
+		{
+			if (isValidGoldGeneral2(B, Sc, Dc,'W') == true)
+			{
+				return true;
+			}
+			return false;
+		}
+		else
+		{
+			if (isVertical(Sc, Dc) == true)
+			{
+				if (Dc.ri - Sc.ri == 1)
+				{
+					return true;
+				}
+				return false;
+			}
+			return false;
+		}
+	}
+	else if (x == 'X')
+	{
+		if (P.X == true)
+		{
+			if (isValidGoldGeneral2(B, Sc, Dc,'X') == true)
+			{
+				return true;
+			}
+			return false;
+		}
+		else
+		{
+			if (isVertical(Sc, Dc) == true)
+			{
+				if (Dc.ri - Sc.ri == 1)
+				{
+					return true;
+				}
+				return false;
+			}
+			return false;
+		}
+	}
+	else if (x == 'Y')
+	{
+		if (P.Y == true)
+		{
+			if (isValidGoldGeneral2(B, Sc, Dc,'Y') == true)
+			{
+				return true;
+			}
+			return false;
+		}
+		else
+		{
+			if (isVertical(Sc, Dc) == true)
+			{
+				if (Dc.ri - Sc.ri == 1)
+				{
+					return true;
+				}
+				return false;
+			}
+			return false;
+		}
+	}
+	else if (x == 'Z')
+	{
+		if (P.Z == true)
+		{
+			if (isValidGoldGeneral2(B, Sc, Dc,'Z') == true)
+			{
+				return true;
+			}
+			return false;
+		}
+		else
+		{
+			if (isVertical(Sc, Dc) == true)
+			{
+				if (Dc.ri - Sc.ri == 1)
+				{
+					return true;
+				}
+				return false;
+			}
+			return false;
+		}
+	}
+	else if (x == 'J')
+	{
+		if (P.J == true)
+		{
+			if (isValidGoldGeneral2(B, Sc, Dc,'J') == true)
+			{
+				return true;
+			}
+			return false;
+		}
+		else
+		{
+			if (isVertical(Sc, Dc) == true)
+			{
+				if (Dc.ri - Sc.ri == 1)
+				{
+					return true;
+				}
+				return false;
+			}
+			return false;
+		}
+	}
+	return false;
+}
 bool isValidMove(char** B, position Sc, position Dc, isPromoted P)
 {
 	if (B[Sc.ri][Sc.ci] == 'G' || B[Sc.ri][Sc.ci] == 'g' || B[Sc.ri][Sc.ci] == '}' || B[Sc.ri][Sc.ci] == ']')
@@ -234,6 +2094,91 @@ bool isValidMove(char** B, position Sc, position Dc, isPromoted P)
 	return true;
 
 }
+
+void DrawBoxCap(int sr, int sc, int brows, int bcols, int colour, int cap_p1_count, int r)
+{
+	char sym = -37;
+	for (int ri = brows - 1; ri >= 0; ri--)
+	{
+		for (int ci = bcols - 1; ci >= 0; ci--)
+		{
+			SetClr(colour);
+			if (ri == brows / 2 && ci == bcols / 2 - 1)
+			{
+				SetClr(3);
+				if (r == 0)
+				{
+					cout << "P";
+				}
+				else if (r == 1)
+				{
+					cout << "B";
+				}
+				else if (r == 2)
+				{
+					cout << "R";
+				}
+				else if (r == 3)
+				{
+					cout << "L";
+				}
+				else if (r == 4)
+				{
+					cout << "N";
+				}
+				else if (r == 5)
+				{
+					cout << "S";
+				}
+				else if (r == 6)
+				{
+					cout << "G";
+				}
+
+			}
+			gotoRowCol(sr + ri + 20, sc + ci + 8);
+			SetClr(colour);
+			if (ri != brows / 2 || ci != bcols / 2)
+				cout << sym;
+			if (ri == brows - 2 && ci == bcols - 3)
+			{
+				SetClr(3);
+				cout << cap_p1_count;
+			}
+		}
+	}
+}
+void printCapBoardP1(int cap_P1_count[7])
+{
+	for (int ri = 0; ri < 7; ri++)
+	{
+		if (ri % 2 == 0)
+		{
+			DrawBoxCap(7 * ri-2, 10, 7, 7, 7, cap_P1_count[ri], ri);
+		}
+		else
+		{
+			DrawBoxCap(7 * ri-2, 10, 7, 7, 8, cap_P1_count[ri], ri);
+		}
+	}
+
+}
+void printCapBoardP2(int cap_P2_count[7])
+{
+	for (int ri = 0; ri < 7; ri++)
+	{
+		if (ri % 2 == 0)
+		{
+			DrawBoxCap(7 * ri - 2, 95, 7, 7, 7,cap_P2_count[ri], ri);
+		}
+		else
+		{
+			DrawBoxCap(7 * ri - 2, 95, 7, 7, 8, cap_P2_count[ri], ri);
+		}
+	}
+}
+
+
 void DrawBox(int sr, int sc, int brows, int bcols, int colour, char**& B, int r, int c)
 {
 	char sym = -37;
@@ -294,6 +2239,78 @@ void DrawBox(int sr, int sc, int brows, int bcols, int colour, char**& B, int r,
 			}
 
 			gotoRowCol(sr + ri + 20, sc + ci + 42);
+			if (ri != brows / 2 || ci != bcols / 2)
+				cout << sym;
+		}
+	}
+	//cout << B[r][c];
+}
+void DrawBox2(int sr, int sc, int brows, int bcols, int colour, char**& B, int r, int c)
+{
+
+	char sym = -37;
+	for (int ri = brows - 1; ri >= 0; ri--)
+	{
+		for (int ci = bcols - 1; ci >= 0; ci--)
+		{
+			if (ri == 0 || ci == 0 || ri == brows - 1 || ci == bcols - 1)
+			{
+				SetClr(2);
+			}
+			else
+			{
+				SetClr(colour);
+			}
+			if (ri == brows / 2 && ci == bcols / 2)
+			{
+				if (colour == 15)
+				{
+					SetClr(0);
+				}
+				if (colour == 0)
+				{
+					SetClr(8);
+
+				}
+				gotoRowCol(sr + ri+20, sc + ri+42);
+				SetClr(9);
+				if (B[r][c] != '-')
+				{
+					if (B[r][c] == 'L' || B[r][c] == 'A')
+						cout << 'L';
+					else if (B[r][c] == 'l' || B[r][c] == 'a')
+						cout << 'l';
+					else if (B[r][c] == 'N' || B[r][c] == 'C')
+						cout << 'N';
+					else if (B[r][c] == 'n' || B[r][c] == 'c')
+						cout << 'n';
+					else if (B[r][c] == 'S' || B[r][c] == 'F')
+						cout << 'S';
+					else if (B[r][c] == 's' || B[r][c] == 'f')
+						cout << 's';
+					else if (B[r][c] == 'G')
+						cout << 'G';
+					else if (B[r][c] == 'K')
+						cout << 'K';
+					else if (B[r][c] == 'g')
+						cout << 'g';
+					else if (B[r][c] == 'k')
+						cout << 'k';
+					else if (B[r][c] == 'B')
+						cout << 'B';
+					else if (B[r][c] == 'b')
+						cout << 'b';
+					else if (B[r][c] == 'R')
+						cout << 'R';
+					else if (B[r][c] == 'r')
+						cout << 'r';
+					else if (B[r][c] == 'P' || B[r][c] == 'Q' || B[r][c] == 'T' || B[r][c] == 'U' || B[r][c] == 'V' || B[r][c] == 'W' || B[r][c] == 'X' || B[r][c] == 'Y' || B[r][c] == 'Z')
+						cout << 'P';
+					else if (B[r][c] == 'p' || B[r][c] == 'q' || B[r][c] == 't' || B[r][c] == 'u' || B[r][c] == 'v' || B[r][c] == 'w' || B[r][c] == 'x' || B[r][c] == 'y' || B[r][c] == 'z')
+						cout << 'p';
+				}
+			}
+			gotoRowCol(sr + ri+20, sc + ci+42);
 			if (ri != brows / 2 || ci != bcols / 2)
 				cout << sym;
 		}
@@ -543,14 +2560,140 @@ void printBoardCheck(int dim, int rows, int columns, char**& B, position Kc)
 	}
 }
 
-void findKing(char** B, int dim, int turn, position& Kc);
-bool isCheck(char** B, int turn, int dim, isPromoted P);
+void findKing(char** B, int dim, int turn, position& Kc)
+{
+	for (int ri = 0; ri < 9; ri++)
+	{
+		for (int ci = 0; ci < 9; ci++)
+		{
+			if (turn == 1)
+			{
+				if (B[ri][ci] == 'K')
+				{
+					Kc.ri = ri;
+					Kc.ci = ci;
+					break;
+				}
+			}
+			else if (turn == 0)
+			{
+				if (B[ri][ci] == 'k')
+				{
+					Kc.ri = ri;
+					Kc.ci = ci;
+					break;
+				}
+			}
+		}
+	}
+}
+bool isCheck(char** B, int turn, int dim, isPromoted P)
+{
+	//turn = (turn + 1) % 2;
+	position Kc, Sc;
+	findKing(B, dim, turn, Kc);
+
+	for (int ri = 0; ri < 9; ri++)
+	{
+		for (int ci = 0; ci < 9; ci++)
+		{
+			Sc.ri = ri;
+			Sc.ci = ci;
+			if (turn == 0)
+			{
+				if (isValidMove(B, Sc, Kc, P) == true)
+				{
+					if (isWhite(B[Sc.ri][Sc.ci]) == true)
+					{
+						return true;
+					}
+				}
+			}
+			if (turn == 1)
+			{
+				if (isValidMove(B, Sc, Kc, P) == true)
+				{
+					if (isBlack(B[Sc.ri][Sc.ci]) == true)
+					{
+						return true;
+					}
+				}
+			}
+		}
+	}
+	return false;
+}
 bool isSelfCheck(char** B, int turn, int dim, isPromoted P)
 {
 	position Kc, Sc;
 	findKing(B, dim, turn, Kc);
 	turn = (turn + 1) % 2;
 	return(isCheck(B, turn, 9, P));
+}
+bool isCheckMate2(char** B, int turn, int dim, isPromoted P)
+{
+	position Sc,Dc;
+	if (turn == 0)
+	{
+		for (int sr = 0; sr < 9; sr++)
+		{
+			for (int sc = 0; sc < 9; sc++)
+			{
+				Sc.ri = sr; Sc.ci = sc;
+				if (isWhite(B[sr][sc]) == true)
+				{
+					for (int ri = 0; ri < 9; ri++)
+					{
+						for (int ci = 0; ci < 9; ci++)
+						{
+							Dc.ri = ri; Dc.ci = ci;
+							if ((isValidMove(B,Sc,Dc,P)== true))
+							{
+								if (isWhite(B[ri][ci]) != true)
+								{
+									if (isCheck(B, turn, 9, P) == false)
+									{
+										return false;
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+		return true;
+	}
+	if (turn == 1)
+	{
+		for (int sr = 0; sr < 9; sr++)
+		{
+			for (int sc = 0; sc < 9; sc++)
+			{
+				Sc.ri = sr; Sc.ci = sc;
+				if (isBlack(B[sr][sc]) == true)
+				{
+					for (int ri = 0; ri < 9; ri++)
+					{
+						for (int ci = 0; ci < 9; ci++)
+						{
+							Dc.ri = ri; Dc.ci = ci;
+							if ((isValidMove(B, Sc, Dc, P) == true))
+							{
+									if (isCheck(B, turn, 9, P) == false)
+									{
+										return false;
+									}
+								
+							}
+						}
+					}
+				}
+			}
+		}
+		return true;
+	}
+	return false;
 }
 bool isCheckMate(char** B, int dim, int turn, isPromoted P)
 {
@@ -679,7 +2822,98 @@ bool ismycheckmate(char** B, int dim, int turn, isPromoted P)
 }
 
 
-void DrawBoxUndoGraphical(int brows, int bcols);
+void DrawBoxUndo(int brows, int bcols)
+{
+	char sym = -37;
+	for (int ri = 0; ri <= brows-1; ri++)
+	{
+		gotoRowCol(71 + ri, 106);
+		for (int ci = 0; ci <= bcols-1; ci++)
+		{
+			SetClr(1);
+			cout << sym;
+		}
+		cout << "\n";
+	}
+	for (int ri = 0; ri <= brows-1; ri++)
+	{
+		for (int ci = 0; ci <= brows-1; ci++)
+		{
+			if (ri == brows / 2 - 1 && ci == bcols / 2 - 1)
+			{
+				gotoRowCol(71 + ri, 106+ci);
+				SetClr(7);
+				cout << "\b\bUNDO";
+			}
+		}
+	}
+}
+void DrawBoxUndoGraphical(int brows, int bcols)
+{
+	char sym = -37;
+	for (int ri = 0; ri <= brows - 1; ri++)
+	{
+		gotoRowCol(91 + ri, 11);
+		for (int ci = 0; ci <= bcols - 1; ci++)
+		{
+			SetClr(1);
+			cout << sym;
+		}
+		cout << "\n";
+	}
+	for (int ri = 0; ri <= brows - 1; ri++)
+	{
+		for (int ci = 0; ci <= brows - 1; ci++)
+		{
+			if (ri == brows / 2 - 1 && ci == bcols / 2 - 1)
+			{
+				gotoRowCol(91 + ri, 11 + ci);
+				SetClr(7);
+				cout << "\b\bUNDO";
+			}
+		}
+	}
+}
+void DrawBoxUndoGraphical2(int brows, int bcols)
+{
+	char sym = -37;
+	for (int ri = 0; ri <= brows - 1; ri++)
+	{
+		gotoRowCol(91 + ri, 11);
+		for (int ci = 0; ci <= bcols - 1; ci++)
+		{
+			SetClr(1);
+			cout << sym;
+		}
+		cout << "\n";
+	}
+
+	for (int ri = 0; ri <= brows - 1; ri++)
+	{
+		for (int ci = 0; ci <= brows - 1; ci++)
+		{
+			if (ri == brows / 2 +2 && ci == bcols / 2-1 || ri == brows / 2+1 && ci == bcols / 2 || ri == brows / 2 && ci == bcols / 2 || ri == brows / 2-1 && ci == bcols / 2 || ri == brows / 2 - 2 && ci == bcols / 2-1 || ri == brows / 2 - 2 && ci == bcols / 2 - 2)
+			{
+				gotoRowCol(91 + ri, 12+ci);
+				SetClr(7);
+				cout << sym;
+			}
+			if (ri == brows / 2 - 1 && ci == bcols / 2 - 3)
+			{
+				gotoRowCol(91 + ri, 12 + ci);
+				SetClr(7);
+				cout << sym;
+			}
+			if (ri == brows / 2 && ci == bcols / 2 - 3 || ri == brows / 2 && ci == bcols / 2 - 2 || ri == brows / 2 + 2 && ci == bcols / 2 - 2 || ri == brows / 2 + 2 && ci == bcols / 2 - 1)
+			{
+				gotoRowCol(91 + ri, 12 + ci);
+				SetClr(7);
+				cout << sym;
+			}
+			
+		}
+	}
+}
 void checkPromotions(char** B, position Sc, position Dc, int dim, isPromoted& P)
 {
 	if (isWhite(B[Sc.ri][Sc.ci]) == true)
@@ -981,15 +3215,408 @@ bool ISWIN(char** B, int dim)
 	}
 	return false;
 }
-void DrawBoxEmpty(int sr, int sc, int brows, int bcols, int colour, int colour2);
-void DrawBoxPawn(int sr, int sc, int brows, int bcols, int colour, int colour2);
-void DrawBoxKing(int sr, int sc, int brows, int bcols, int colour, int colour2);
-void DrawBoxGoldGeneral(int sr, int sc, int brows, int bcols, int colour, int colour2);
-void DrawBoxSilverGeneral(int sr, int sc, int brows, int bcols, int colour, int colour2);
-void DrawBoxLance(int sr, int sc, int brows, int bcols, int colour, int colour2);
-void DrawBoxBishop(int sr, int sc, int brows, int bcols, int colour, int colour2);
-void DrawBoxRook(int sr, int sc, int brows, int bcols, int colour, int colour2);
-void DrawBoxKnight(int sr, int sc, int brows, int bcols, int colour, int colour2);
+
+int main859()
+{
+	// Pattern for Capture : P B R L N S G
+	int cap_P1_count[7]{}, cap_P2_count[7]{};
+	char array[150][9][9]{};
+	bool isUndo = false; bool isPlace = false;
+	char placed_sym = '-';
+	int arraySize = 0;
+	int turn = 1, dim = 0, size = 5;
+	isPromoted P{};
+	char** Board;
+	position Sc{}, Dc{};
+	string P_name[2];
+	init2(Board, dim, P_name, turn, P,cap_P1_count,cap_P2_count);
+	printBoard(9, size, size, Board,cap_P1_count,cap_P2_count);
+	char sym = -37;
+
+	while (true)
+	{
+		isUndo = false;
+
+		char  sym, sym1 = 0;
+		int sr = 0, sc = 0, er = 0, ec = 0;
+		bool check = false;
+		do
+		{
+			Select2(Sc, Dc, dim, Board, turn, P_name, sym1, size, P,isUndo,cap_P1_count, cap_P2_count);
+			if (isUndo == true)
+			{
+				break;
+			}
+		} while (isValidMove(Board, Sc, Dc, P) == false);
+		if (isUndo == true)
+		{
+		//	undoBoard(Board, array, arraySize, turn);
+		}
+		else if (isUndo == false)
+		{
+			//saveturn(Board, array, 9, arraySize);
+			updateBoard(Board, Sc, Dc, sym1,isPlace,placed_sym);
+		}
+		printBoard(9, size, size, Board,cap_P1_count,cap_P2_count);
+		saveTextfile(Board, 9, "Text1.txt");
+		/*turn = (turn + 1) % 2;
+		if (isCheck(Board, turn, 9, P) == true)
+		{
+			cout << "\n Check";
+			_getch();
+			if (isCheckMate(Board, turn, 9, P) == false)
+			{
+				cout << "\n\n its a check mate";
+				_getch();
+				return 0;
+			}
+		}*/
+		if (ISWIN(Board, 9) == true)
+		{
+			cout << "\n\n Game khatam";
+			_getch();
+			return 0;
+		}
+		turn = (turn + 1) % 2;
+		/*if (isCheck(Board, turn, 9, P) == true)
+		{
+			cout << "\n Check";
+			_getch();
+			if (ismycheckmate(Board, turn, 9, P) == true)
+			{
+				cout << "\n\n its a check mate";
+				_getch();
+				return 0;
+			}
+		}*/
+		//turn = (turn + 1) % 2;
+
+		/*if (isCheck(Board, turn, dim, P) == true)
+		{
+			cout << "check ";
+			_getch();
+		}*/
+	}
+	return 0;
+}
+
+
+
+
+
+void DrawBoxEmpty(int sr, int sc, int brows, int bcols, int colour, int colour2)
+{
+	char sym = -37;
+	for (int ri = brows - 1; ri >= 0; ri--)
+	{
+		for (int ci = bcols - 1; ci >= 0; ci--)
+		{
+			SetClr(colour);
+			gotoRowCol(sr + ri, sc + ci);
+			cout << sym;
+		}
+	}
+}
+void DrawBoxPawn(int sr, int sc, int brows, int bcols, int colour, int colour2)
+{
+	char sym = -37;
+	for (int ri = brows - 1; ri >= 0; ri--)
+	{
+		for (int ci = bcols - 1; ci >= 0; ci--)
+		{
+			SetClr(colour);
+				gotoRowCol(sr + ri, sc + ci);
+				cout << sym;
+				if (ri == bcols / 2 - 2 && ci == bcols / 2 - 1)
+				{
+					SetClr(colour2);
+					cout << sym;
+				}
+				if (ri == bcols / 2 - 1 && ci > 1 && ci < bcols -4 )
+				{
+					SetClr(colour2);
+					cout << sym;
+				}
+				if (ri == bcols / 2 && ci == bcols/2-1)
+				{
+					SetClr(colour2);
+					cout << sym;
+				}
+				if (ri == bcols / 2 +1 && ci > 0 && ci < bcols - 3)
+				{
+					SetClr(colour2);
+					cout << sym;
+				}
+		}
+	}
+	//cout << B[r][c];
+}
+void DrawBoxKing(int sr, int sc, int brows, int bcols, int colour, int colour2)
+{
+	char sym = -37;
+	for (int ri = brows - 1; ri >= 0; ri--)
+	{
+		for (int ci = bcols - 1; ci >= 0; ci--)
+		{
+			SetClr(colour);
+			gotoRowCol(sr + ri, sc + ci);
+			cout << sym;
+			if (ri == bcols / 2 - 3 && ci ==1 || ci == 4 && ri == bcols/2-3 || ri == bcols/2-3 && ci ==7 )
+			{
+				SetClr(colour2);
+				cout << sym;
+			}
+			if (ri == bcols / 2 -2 && ci > 1 && ci < bcols - 4)
+			{
+				SetClr(colour2);
+				cout << sym;
+			}
+			if (ri == bcols / 2 && ci > 2 && ci < bcols - 5 || ri == bcols / 2 - 1 && ci > 2 && ci < bcols - 5)
+			{
+				SetClr(colour2);
+				cout << sym;
+			}
+			if (ri == bcols / 2 +1  && ci > 1 && ci < bcols - 4)
+			{
+				SetClr(colour2);
+				cout << sym;
+			}
+			if (ri == bcols / 2 + 2 && ci > 0 && ci < bcols - 3)
+			{
+				SetClr(colour2);
+				cout << sym;
+			}
+		}
+	}
+	//cout << B[r][c];
+}
+void DrawBoxGoldGeneral(int sr, int sc, int brows, int bcols, int colour, int colour2)
+{
+	char sym = -37;
+	for (int ri = brows - 1; ri >= 0; ri--)
+	{
+		for (int ci = bcols - 1; ci >= 0; ci--)
+		{
+			SetClr(colour);
+			gotoRowCol(sr + ri, sc + ci);
+			cout << sym;
+			if (ri == bcols / 2 - 2 && ci == 2 || ri == bcols / 2 - 2 && ci == 6 )
+			{
+				SetClr(colour2);
+				cout << sym;
+			}
+			if (ri == bcols / 2 - 1 && ci > 1 && ci < bcols - 4)
+			{
+				SetClr(colour2);
+				cout << sym;
+			}
+			if (ri == bcols / 2 && ci > 2 && ci < bcols - 5 )
+			{
+				SetClr(colour2);
+				cout << sym;
+			}
+			if (ri == bcols / 2 + 1 && ci > 1 && ci < bcols - 4)
+			{
+				SetClr(colour2);
+				cout << sym;
+			}
+			if (ri == bcols / 2 + 2 && ci > 0 && ci < bcols - 3)
+			{
+				SetClr(colour2);
+				cout << sym;
+			}
+		}
+	}
+	//cout << B[r][c];
+}
+void DrawBoxSilverGeneral(int sr, int sc, int brows, int bcols, int colour, int colour2)
+{
+	char sym = -37;
+	for (int ri = brows - 1; ri >= 0; ri--)
+	{
+		for (int ci = bcols - 1; ci >= 0; ci--)
+		{
+			SetClr(colour);
+			gotoRowCol(sr + ri, sc + ci);
+			cout << sym;
+			if (ri == bcols / 2 - 2 && ci == bcols/2-1 )
+			{
+				SetClr(colour2);
+				cout << sym;
+			}
+			if (ri == bcols / 2 - 1 && ci > 1 && ci < bcols - 4)
+			{
+				SetClr(colour2);
+				cout << sym;
+			}
+			if (ri == bcols / 2 && ci > 2 && ci < bcols - 5)
+			{
+				SetClr(colour2);
+				cout << sym;
+			}
+			if (ri == bcols / 2 + 1 && ci > 1 && ci < bcols - 4)
+			{
+				SetClr(colour2);
+				cout << sym;
+			}
+			if (ri == bcols / 2 + 2 && ci > 0 && ci < bcols - 3)
+			{
+				SetClr(colour2);
+				cout << sym;
+			}
+		}
+	}
+	//cout << B[r][c];
+}
+void DrawBoxLance(int sr, int sc, int brows, int bcols, int colour, int colour2)
+{
+	char sym = -37;
+	for (int ri = brows - 1; ri >= 0; ri--)
+	{
+		for (int ci = bcols - 1; ci >= 0; ci--)
+		{
+			SetClr(colour);
+			gotoRowCol(sr + ri, sc + ci);
+			cout << sym;
+			if (ri == bcols / 2 - 2 && ci == bcols/2-1)
+			{
+				SetClr(colour2);
+				cout << sym;
+			}
+			if (ri == bcols / 2 - 1 && ci > 2 && ci < bcols - 5)
+			{
+				SetClr(colour2);
+				cout << sym;
+			}
+			if (ri == bcols / 2 && ci > 2 && ci < bcols - 5)
+			{
+				SetClr(colour2);
+				cout << sym;
+			}
+			if (ri == bcols / 2 + 1 && ci > 2 && ci < bcols - 5)
+			{
+				SetClr(colour2);
+				cout << sym;
+			}
+			if (ri == bcols / 2 + 2 && ci > 1 && ci < bcols - 4)
+			{
+				SetClr(colour2);
+				cout << sym;
+			}
+		}
+	}
+	//cout << B[r][c];
+}
+void DrawBoxBishop(int sr, int sc, int brows, int bcols, int colour, int colour2)
+{
+	char sym = -37;
+	for (int ri = brows - 1; ri >= 0; ri--)
+	{
+		for (int ci = bcols - 1; ci >= 0; ci--)
+		{
+			SetClr(colour);
+			gotoRowCol(sr + ri, sc + ci);
+			cout << sym;
+			
+			if (ri == bcols / 2-2 && ci == bcols/2-1)
+			{
+				SetClr(colour2);
+				cout << sym;
+			}
+			if (ri == bcols / 2-1 && ci > 2 && ci < bcols - 5)
+			{
+				SetClr(colour2);
+				cout << sym;
+			}
+			if (ri == bcols / 2 && ci == bcols/2-1)
+			{
+				SetClr(colour2);
+				cout << sym;
+			}
+			if (ri == bcols / 2+1 && ci > 2 && ci < bcols - 5)
+			{
+				SetClr(colour2);
+				cout << sym;
+			}
+			if (ri == bcols / 2 + 2 && ci > 2 && ci < bcols - 5)
+			{
+				SetClr(colour2);
+				cout << sym;
+			}
+			if (ri == bcols / 2 + 3 && ci > 1 && ci < bcols - 4)
+			{
+				SetClr(colour2);
+				cout << sym;
+			}
+		}
+	}
+}
+void DrawBoxRook(int sr, int sc, int brows, int bcols, int colour, int colour2)
+{
+	char sym = -37;
+	for (int ri = brows - 1; ri >= 0; ri--)
+	{
+		for (int ci = bcols - 1; ci >= 0; ci--)
+		{
+			SetClr(colour);
+			gotoRowCol(sr + ri, sc + ci);
+			cout << sym;
+			if (ri == brows / 2 - 3 && ci == 1 || ri == brows / 2 - 3 && ci == bcols - 4)
+			{
+				SetClr(colour2);
+				cout << sym;
+			}
+			if (ri == brows / 2 - 2 && ci == 1 || ri == brows / 2 - 2 && ci == bcols - 4)
+			{
+				SetClr(colour2);
+				cout << sym;
+			}
+			if (ri == brows / 2 - 1 && ci == 2 || ri == brows / 2 - 1 && ci == bcols - 5)
+			{
+				SetClr(colour2);
+				cout << sym;
+			}
+			if (ri == bcols / 2 + 3 && ci > 1 && ci < bcols - 4 || ri == bcols / 2 + 2 && ci > 1 && ci < bcols - 4 || ri == bcols / 2 + 1 && ci > 1 && ci < bcols - 4 || ri == bcols / 2  && ci > 1 && ci < bcols - 4)
+			{
+				SetClr(colour2);
+				cout << sym;
+			}
+		}
+	}
+	//cout << B[r][c];
+}
+void DrawBoxKnight(int sr, int sc, int brows, int bcols, int colour, int colour2)
+{
+	char sym = -37;
+	for (int ri = brows - 1; ri >= 0; ri--)
+	{
+		for (int ci = bcols - 1; ci >= 0; ci--)
+		{
+			SetClr(colour);
+			gotoRowCol(sr + ri, sc + ci);
+			cout << sym;
+			
+			if (ri == brows / 2 - 2 && ci == bcols / 2 - 1)
+			{
+				SetClr(colour2);
+				cout << sym;
+			}
+			if (ri == brows / 2 - 1 && ci >2 && ci < 6)
+			{
+				SetClr(colour2);
+				cout << sym;
+			}
+			if (ri == bcols / 2 + 3 && ci > 1 && ci < bcols - 4 || ri == bcols / 2 + 2 && ci > 3 && ci < bcols - 6 || ri == bcols / 2 + 1 && ci > 2 && ci < bcols - 6 || ri == bcols / 2 && ci > 1 && ci < bcols - 4 || ri == bcols/2+1 && ci == bcols-5)
+			{
+				SetClr(colour2);
+				cout << sym;
+			}
+		}
+	}
+	//cout << B[r][c];
+}
+
+
 void my_sleep(float x)
 {
 	for (int i = 0; i < 1000000 * x; i++);
@@ -1673,12 +4300,230 @@ void printBoardRply(int dim, int rows, int columns, char**& B)
 	DrawBoxUndoGraphical2(10, 10);
 	
 }
-void Replay1(char** B, int dim, int arraysize, char Array[150][9][9]);
-void NewGame(int brows, int bcols);
-void LoadGame(int brows, int bcols);
-void Replay(int brows, int bcols);
-void Exit(int brows, int bcols);
-void printIntro(int brows, int bcols);
+void Replay1(char** B, int dim, int arraysize, char Array[150][9][9])
+{
+	/*ofstream writer("Text2.txt");
+	writer << "\n9\n";
+	for (int ri = 0; ri < 9; ri++)
+	{
+		for (int ci = 0; ci < 9; ci++)
+		{
+			writer << B[ri][ci] << " ";
+		}
+		writer << "\n";
+	}*/
+
+	for (int i = 0; i < arraysize; i++)
+	{
+		for (int ri = 0; ri < 9; ri++)
+		{
+			for (int ci = 0; ci < 9; ci++)
+			{
+				B[ri][ci] = Array[i][ri][ci];
+			}
+		}
+		printBoardRply(9, 20, 20, B);
+		my_sleep(100);
+	}
+}
+int main111()
+{
+
+	PlaySound(TEXT("tune"), NULL, SND_ASYNC);
+	SetClr(15);
+	char array[150][9][9]{};
+	// Pattern for Capture : P B R L N S G
+	int cap_P1_count[7]{}, cap_P2_count[7]{};
+	int cap_P1_save[150][7]{}, cap_P2_save[150][7]{};
+	int arraySize = 0, save1size=0, save2size=0;
+	bool isUndo = false; bool isPlace = false;
+	int turn = 1, dim = 0, size = 11;
+	isPromoted P{};
+	char** Board;
+	position Sc{}, Dc{};
+	string P_name[2];
+	init2(Board, dim, P_name, turn, P,cap_P1_count,cap_P2_count);
+	system("cls");
+	char symbo = -37;
+	SetClr(3);
+	PlaySound(TEXT("begin"), NULL, SND_SYNC);
+	printBoardNew(9, size, size, Board,cap_P1_count,cap_P2_count,P, turn);
+	while (true)
+	{
+		
+		isUndo = false;
+		isPlace = false;
+		char  sym, sym1 = 0, place_sym = '-';
+		int sr = 0, sc = 0, er = 0, ec = 0;
+		bool check = false;
+		do
+		{
+			Select3(Sc, Dc, dim, Board, turn, P_name, sym1, size, P,isUndo,cap_P1_count,cap_P2_count, isPlace,place_sym);
+			if (isUndo == true)
+			{
+				break;
+			}
+		} while (isValidMove(Board, Sc, Dc, P) == false);
+		if (isUndo == true)
+		{
+			undoBoard(Board, array, arraySize, turn, cap_P1_count, cap_P2_count, cap_P1_save, cap_P2_save, save1size, save2size);
+		}
+		else if (isUndo == false)
+		{
+			saveturn(Board, array, 9, arraySize,cap_P1_count,cap_P2_count,cap_P1_save, cap_P2_save, save1size,save2size);
+			updateBoard(Board, Sc, Dc, sym1,isPlace,place_sym);
+		}
+		printBoardNew(9, size, size, Board,cap_P1_count,cap_P2_count,P, turn);
+		saveTextfile(Board, 9,"Text1.txt");
+		/*if (isCheckMate(Board, turn, 9, P) == false)
+		{
+			gotoRowCol(90, 10);
+			cout << "\n Its a check Mate ";
+			_getch();
+			return 0;
+		}*/
+		turn = (turn + 1) % 2;
+	}
+	system("cls");
+	int choice;
+	cout << "Do you want to replay ? ";
+	cin >> choice;
+	if (choice == 1)
+	{
+		Replay1(Board,9,arraySize,array);
+	}
+
+	system("cls");
+	cout << "\n\n This game Ends now \n\n Press Enter to Exit";
+	_getch();
+	return 0;
+} 
+
+void NewGame(int brows, int bcols)
+{
+	char sym = -37;
+	for (int ri = 0; ri <= brows - 1; ri++)
+	{
+		gotoRowCol(30 + ri, 100);
+		for (int ci = 0; ci <= bcols - 1; ci++)
+		{
+			SetClr(1);
+			cout << sym;
+		}
+		cout << "\n";
+	}
+	for (int ri = 0; ri <= brows - 1; ri++)
+	{
+		for (int ci = 0; ci <= bcols - 1; ci++)
+		{
+			if (ri == brows / 2 - 1 && ci == bcols / 2 - 1)
+			{
+				SetClr(4);
+				gotoRowCol(35, 113);
+				    cout << "\b\bNEW GAME";
+					
+			}
+		}
+	}	
+}
+void LoadGame(int brows, int bcols)
+{
+	char sym = -37;
+	for (int ri = 0; ri <= brows - 1; ri++)
+	{
+		gotoRowCol(42 + ri, 100);
+		for (int ci = 0; ci <= bcols - 1; ci++)
+		{
+			SetClr(1);
+			cout << sym;
+		}
+		cout << "\n";
+	}
+	for (int ri = 0; ri <= brows - 1; ri++)
+	{
+		for (int ci = 0; ci <= bcols - 1; ci++)
+		{
+			if (ri == brows / 2 - 1 && ci == bcols / 2 - 1)
+			{
+				SetClr(4);
+				gotoRowCol(47, 113);
+				cout << "\b\b\bLOAD GAME";
+
+			}
+		}
+	}
+}
+void Replay(int brows, int bcols)
+{
+	char sym = -37;
+	for (int ri = 0; ri <= brows - 1; ri++)
+	{
+		gotoRowCol(54 + ri, 100);
+		for (int ci = 0; ci <= bcols - 1; ci++)
+		{
+			SetClr(1);
+			cout << sym;
+		}
+		cout << "\n";
+	}
+	for (int ri = 0; ri <= brows - 1; ri++)
+	{
+		for (int ci = 0; ci <= bcols - 1; ci++)
+		{
+			if (ri == brows / 2 - 1 && ci == bcols / 2 - 1)
+			{
+				SetClr(4);
+				gotoRowCol(58, 113);
+				cout << "\bREPLAY";
+
+			}
+		}
+	}
+}
+void Exit(int brows, int bcols)
+{
+	char sym = -37;
+	for (int ri = 0; ri <= brows - 1; ri++)
+	{
+		gotoRowCol(69 + ri, 100);
+		for (int ci = 0; ci <= bcols - 1; ci++)
+		{
+			SetClr(1);
+			cout << sym;
+		}
+		cout << "\n";
+	}
+	for (int ri = 0; ri <= brows - 1; ri++)
+	{
+		for (int ci = 0; ci <= bcols - 1; ci++)
+		{
+			if (ri == brows / 2 - 1 && ci == bcols / 2 - 1)
+			{
+				SetClr(4);
+				gotoRowCol(73, 103);
+				cout << "EXIT";
+
+			}
+		}
+	}
+}
+void printIntro(int brows, int bcols)
+{
+	for (int ri = 0; ri < 110; ri++)
+	{
+		for (int ci = 0; ci < 285; ci++)
+		{
+			SetClr(4);
+			cout << char(-37);
+		}
+		cout << "\n";
+	}
+
+	NewGame(10, 30);
+	LoadGame(10, 30);
+	Replay(10, 30);
+	//Exit(10, 30);
+}
 void getSelection(int x, int y, int & choice)
 {
 	choice;
@@ -1745,7 +4590,7 @@ int main()
 					break;
 				}
 			} while (isValidMove(Board, Sc, Dc, P) == false);
-			if (isUndo == true)
+ 			if (isUndo == true)
 			{
 				undoBoard(Board, array, arraySize, turn, cap_P1_count, cap_P2_count, cap_P1_save, cap_P2_save, save1size, save2size);
 			}
@@ -1757,6 +4602,13 @@ int main()
 			PlaySound(TEXT("source"), NULL, SND_SYNC);
 			printBoardNew(9, size, size, Board, cap_P1_count, cap_P2_count, P, turn);
 			saveTextfile(Board, 9, "Text1.txt");
+			/*if (isCheckMate(Board, turn, 9, P) == false)
+			{
+				gotoRowCol(90, 10);
+				cout << "\n Its a check Mate ";
+				_getch();
+				return 0;
+			}*/
 			if (ISWIN(Board, 9) == true)
 			{
 				cout << "\n\n Game khatam";
@@ -1832,6 +4684,13 @@ int main()
 			PlaySound(TEXT("source"), NULL, SND_SYNC);
 			printBoardNew(9, size, size, Board, cap_P1_count, cap_P2_count, P, turn);
 			saveTextfile(Board, 9, "Text1.txt");
+			/*if (isCheckMate(Board, turn, 9, P) == false)
+			{
+				gotoRowCol(90, 10);
+				cout << "\n Its a check Mate ";
+				_getch();
+				return 0;
+			}*/
 			if (ISWIN(Board, 9) == true)
 			{
 				cout << "\n\n Game khatam";
@@ -1860,6 +4719,10 @@ int main()
 		cout << "\n\n This game Ends now \n\n Press Enter to Exit";
 		_getch();
 		return 0;
+	}
+	if (choice == 3)
+	{
+		system("cls");
 	}
 	_getch();
 	return 0;
